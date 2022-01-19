@@ -1,0 +1,115 @@
+---
+title: "Practica General - Fatima Arrogante Funes"
+author: "Fatima Arrogante Funes"
+date: "19/1/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(palmerpenguins)
+library(ggplot2)
+library(dplyr)
+```
+
+# Apartado 1: 
+# Número de individuos totales, masculinos y femeninos por especie. 
+
+
+```{r spec_counts, warn=FALSE}
+
+# Eliminar NA
+df <-na.omit(penguins)
+
+penguins |> # pipe para que vuelva sobre penguins
+  group_by(species, sex) |>
+  count()
+```
+
+# Apartado 1: 
+# La media, desviación estándar, valor mínimo y máximo de la longitud y profundidad del pico, 
+# la longitud de la aleta y el tamaño.
+
+```{r stats_counts, warn=FALSE}
+
+summarise(df,mean_bill_length_mm = mean(bill_length_mm), 
+          mean_bill_depth_mm = mean(bill_depth_mm),
+          mean_flipper_length_mm = mean(flipper_length_mm),
+          mean_body_mass_g = mean(body_mass_g), # mean para averiguar la media
+          sd_bill_length_mm = sd(bill_length_mm),
+          sd_bill_depth_mm = sd(bill_depth_mm),
+          sd_flipper_length_mm = sd(flipper_length_mm),
+          sd_body_mass_g = sd(body_mass_g), # sd para averiguar la desviación típica
+          max_bill_length_mm = max(bill_length_mm),
+          max_bill_depth_mm = max(bill_depth_mm),
+          max_flipper_length_mm = max(flipper_length_mm),
+          max_body_mass_g = max(body_mass_g), # max para averiguar el máximo
+          min_bill_length_mm = min(bill_length_mm),
+          min_bill_depth_mm = min(bill_depth_mm),
+          min_flipper_length_mm = min(flipper_length_mm),
+          min_body_mass_g = min(body_mass_g) # min para averiguar el mínimo
+          )
+```
+
+# Apartado 2: 
+# Un gráfico de barras que represente el número de individuos muestreados de cada especie en cada isla, 
+# representando las especies en diferentes colores (chinstrap – morado, gentoo – azul, adelie – naranja).
+
+```{r spec_barplot, warn=FALSE}
+
+# Generar lista para asociar colores a especies
+colores <- list(Chinstrap= "purple", 
+                Gentoo = "blue", 
+                Adelie = "orange") 
+
+# Generar gráfico de barras de número de especies por isla
+graficoBarras <- ggplot(data = penguins) +
+  geom_bar(aes(x = island, fill = species)) + 
+             scale_fill_manual(values = colores)
+graficoBarras
+```
+
+# Apartado 2:
+# Contesta a las siguientes preguntas: ¿qué especie se ha muestreado en las tres islas? 
+# ¿cuántos individuos se han muestreado de la isla Dream?
+
+```{r spec_barplot2, warn=FALSE}
+
+# Respuesta primera pregunta: 
+# Especie muestreada en cada isla: Adelie.
+
+# Individuos por especie en las islas
+penguins |>
+  select(island) |> 
+  group_by(island) |>
+  count()
+
+# Respuesta segunda pregunta:
+# Se han muestreado 124 individuos en la isla dream
+```
+
+# Apartado 3: 
+# Un gráfico multipanel de cajas y bigotes del tamaño de los pingüinos según su sexo, 
+# donde aparezca un panel para cada especie.
+
+```{r spec_multiplot, warn=FALSE}
+
+graficoMultipanel <- ggplot(data = df) +
+  geom_boxplot(aes(x = sex, y = body_mass_g)) + 
+  facet_grid (cols = vars(species))
+
+graficoMultipanel
+```
+
+# Apartado 3:
+# Contesta a las siguientes preguntas: ¿qué especie tiene mayor tamaño? 
+# ¿en qué especie las hembras y los machos tienen un tamaño más similar?
+
+```{r spec_multiplot2, warn=FALSE}
+# Respuesta primera pregunta: Gentoo.
+# Respuesta segunda pregunta: Chinstrap, aunque diferen entre sí, pero menos.
+
+```
+
+
